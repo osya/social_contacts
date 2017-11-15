@@ -33,8 +33,8 @@ class HomeView(TemplateView):
                             :class:`EmailAddressesCollectionPage<microsoft.graph.request.email_addresses_collection.EmailAddressesCollectionPage>`:
                                 The emailAddresses
                         """
-                if "emailAddresses" in self_._prop_dict:
-                    return EmailAddressesCollectionPage(self_._prop_dict["emailAddresses"])
+                if 'emailAddresses' in self_._prop_dict:
+                    return EmailAddressesCollectionPage(self_._prop_dict['emailAddresses'])
                 else:
                     return None
 

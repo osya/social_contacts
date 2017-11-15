@@ -1,6 +1,8 @@
 from __future__ import unicode_literals
-from msgraph.session_base import SessionBase
+
 from time import time
+
+from msgraph.session_base import SessionBase
 
 
 class Session(SessionBase):
@@ -17,7 +19,7 @@ class Session(SessionBase):
                  client_secret=None):
         self.token_type = token_type
         self._expires_at = time() + int(expires_in)
-        self.scope = scope_string.split(" ")
+        self.scope = scope_string.split(' ')
         self.access_token = access_token
         self.client_id = client_id
         self.auth_server_url = auth_server_url
@@ -36,7 +38,7 @@ class Session(SessionBase):
 
     def refresh_session(self, expires_in, scope_string, access_token, refresh_token):
         self._expires_at = time() + int(expires_in)
-        self.scope = scope_string.split(" ")
+        self.scope = scope_string.split(' ')
         self.access_token = access_token
         self.refresh_token = refresh_token
 
@@ -54,11 +56,11 @@ class Session(SessionBase):
             default implementation (this one) takes a relative or absolute
             file path for pickle save location, under the name "path"
         """
-        path = "session.pickle"
-        if "path" in save_session_kwargs:
-            path = save_session_kwargs["path"]
+        path = 'session.pickle'
+        if 'path' in save_session_kwargs:
+            path = save_session_kwargs['path']
 
-        with open(path, "wb+") as session_file:
+        with open(path, 'wb+') as session_file:
             import pickle
             # pickle.HIGHEST_PROTOCOL is binary format. Good perf.
             pickle.dump(self, session_file, pickle.HIGHEST_PROTOCOL)
@@ -81,10 +83,10 @@ class Session(SessionBase):
         Returns:
             :class:`Session`: The loaded session
         """
-        path = "session.pickle"
-        if "path" in load_session_kwargs:
-            path = load_session_kwargs["path"]
+        path = 'session.pickle'
+        if 'path' in load_session_kwargs:
+            path = load_session_kwargs['path']
 
-        with open(path, "rb") as session_file:
+        with open(path, 'rb') as session_file:
             import pickle
             return pickle.load(session_file)

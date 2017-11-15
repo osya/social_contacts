@@ -8,7 +8,7 @@ from msgraph.collection_base import CollectionPageBase, CollectionRequestBase, C
 
 
 class EmailAddressesCollectionRequest(CollectionRequestBase):
-    
+
     def __init__(self, request_url, client, options):
         """Initialize the EmailAddressesCollectionRequest
 
@@ -25,11 +25,11 @@ class EmailAddressesCollectionRequest(CollectionRequestBase):
     def get(self):
         """Gets the EmailAddressesCollectionPage
 
-        Returns: 
+        Returns:
             :class:`EmailAddressesCollectionPage<msgraph.request.email_addresses_collection.EmailAddressesCollectionPage>`:
                 The EmailAddressesCollectionPage
         """
-        self.method = "GET"
+        self.method = 'GET'
         collection_response = EmailAddressesCollectionResponse(json.loads(self.send().content))
         return self._page_from_response(collection_response)
 
@@ -37,7 +37,7 @@ class EmailAddressesCollectionRequest(CollectionRequestBase):
     def get_async(self):
         """Gets the EmailAddressesCollectionPage in async
 
-        Yields: 
+        Fields:
             :class:`EmailAddressesCollectionPage<msgraph.request.email_addresses_collection.EmailAddressesCollectionPage>`:
                 The EmailAddressesCollectionPage
         """
@@ -58,15 +58,15 @@ class EmailAddressesCollectionResponse(CollectionResponseBase):
                 The collection page
         """
         if self._collection_page:
-            self._collection_page._prop_list = self._prop_dict["value"]
+            self._collection_page._prop_list = self._prop_dict['value']
         else:
-            self._collection_page = EmailAddressesCollectionPage(self._prop_dict["value"])
+            self._collection_page = EmailAddressesCollectionPage(self._prop_dict['value'])
 
         return self._collection_page
 
 
 class EmailAddressesCollectionPage(CollectionPageBase):
-    
+
     def __getitem__(self, index):
         """Get the EmailAddress at the index specified
 

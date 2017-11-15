@@ -46,6 +46,7 @@ THIRD_PARTY_APPS = (
 )
 LOCAL_APPS = (
     'contacts',
+    'core'
 )
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
@@ -64,8 +65,7 @@ ROOT_URLCONF = 'social_contacts.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [os.path.join(BASE_DIR, 'templates')]
-        ,
+        'DIRS': [os.path.join(BASE_DIR, 'templates')],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [

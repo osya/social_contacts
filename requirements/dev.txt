@@ -1,2 +1,11 @@
 # Everything the developer needs in addition to the production requirements
 -r prod.txt
+
+# Lint and code style
+flake8==3.4.1
+flake8-blind-except==0.1.1
+flake8-isort==2.2.2
+flake8-debugger==1.4.0
+flake8-docstrings==1.1.0
+flake8-quotes==0.12.0
+pep8-naming==0.4.1

@@ -3,7 +3,7 @@ from __future__ import unicode_literals
 import json
 
 from msgraph.auth_provider_base import AuthProviderBase
-from msgraph.options import *
+from msgraph.options import HeaderOption
 
 from contacts.msgraph.session import Session
 
@@ -14,9 +14,8 @@ except ImportError:
 
 
 class AuthProvider(AuthProviderBase):
-
-    MSA_AUTH_SERVER_URL = "https://login.live.com/oauth20_authorize.srf"
-    MSA_AUTH_TOKEN_URL = "https://login.live.com/oauth20_token.srf"
+    MSA_AUTH_SERVER_URL = 'https://login.live.com/oauth20_authorize.srf'
+    MSA_AUTH_TOKEN_URL = 'https://login.live.com/oauth20_token.srf'
 
     def __init__(self, http_provider, client_id=None, scopes=None, access_token=None, session_type=None, loop=None,
                  auth_server_url=None, auth_token_url=None):
@@ -139,40 +138,44 @@ class AuthProvider(AuthProviderBase):
         """
 
         params = {
-            "client_id": self.client_id,
-            "response_type": "code" if response_type is None else response_type,
-            "redirect_uri": redirect_uri
-            }
+            'client_id': self.client_id,
+            'response_type': 'code' if response_type is None else response_type,
+            'redirect_uri': redirect_uri
+        }
         if self.scopes is not None:
-            params["scope"] = " ".join(self.scopes)
+            params['scope'] = ' '.join(self.scopes)
 
-        return "{}?{}".format(self._auth_server_url, urlencode(params))
+        return '{}?{}'.format(self._auth_server_url, urlencode(params))
 
-    def authenticate_client_credentials(self, client_secret, scope):
+    def authenticate_client_credentials(self, redirect_uri, client_secret, scope):
+        """
+        Args:
+            redirect_uri (str): The URI to redirect the response to
+        """
         params = {
-            "client_id": self.client_id,
-            "client_secret": client_secret,
-            "grant_type": "client_credentials"
+            'client_id': self.client_id,
+            'client_secret': client_secret,
+            'grant_type': 'client_credentials'
         }
 
         if scope is not None:
-            params["scope"] = scope
+            params['scope'] = scope
 
         auth_url = self._auth_token_url
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        response = self._http_provider.send(method="POST",
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        response = self._http_provider.send(method='POST',
                                             headers=headers,
                                             url=auth_url,
                                             data=params)
 
         rcont = json.loads(response.content)
-        self._session = self._session_type(rcont["token_type"],
-                                           rcont["expires_in"],
-                                           rcont["access_token"],
+        self._session = self._session_type(rcont['token_type'],
+                                           rcont['expires_in'],
+                                           rcont['access_token'],
                                            self.client_id,
                                            self._auth_token_url,
                                            redirect_uri,
-                                           rcont["refresh_token"] if "refresh_token" in rcont else None,
+                                           rcont['refresh_token'] if 'refresh_token' in rcont else None,
                                            client_secret)
 
     def authenticate(self, code, redirect_uri, client_secret, resource=None):
@@ -188,34 +191,34 @@ class AuthProvider(AuthProviderBase):
                 you want to access
         """
         params = {
-            "client_id": self.client_id,
-            "redirect_uri": redirect_uri,
-            "client_secret": client_secret,
-            "code": code,
-            "response_type": "code",
-            "grant_type": "authorization_code"
+            'client_id': self.client_id,
+            'redirect_uri': redirect_uri,
+            'client_secret': client_secret,
+            'code': code,
+            'response_type': 'code',
+            'grant_type': 'authorization_code'
         }
 
         if resource is not None:
-            params["resource"] = resource
+            params['resource'] = resource
 
         auth_url = self._auth_token_url
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        response = self._http_provider.send(method="POST",
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        response = self._http_provider.send(method='POST',
                                             headers=headers,
                                             url=auth_url,
                                             data=params)
 
         rcont = json.loads(response.content)
-        self._session = self._session_type(rcont["token_type"],
-                                rcont["expires_in"],
-                                rcont["scope"],
-                                rcont["access_token"],
-                                self.client_id,
-                                self._auth_token_url,
-                                redirect_uri,
-                                rcont["refresh_token"] if "refresh_token" in rcont else None,
-                                client_secret)
+        self._session = self._session_type(rcont['token_type'],
+                                           rcont['expires_in'],
+                                           rcont['scope'],
+                                           rcont['access_token'],
+                                           self.client_id,
+                                           self._auth_token_url,
+                                           redirect_uri,
+                                           rcont['refresh_token'] if 'refresh_token' in rcont else None,
+                                           client_secret)
 
     def authenticate_request(self, request):
         """Append the required authentication headers
@@ -236,8 +239,8 @@ class AuthProvider(AuthProviderBase):
             self.refresh_token()
 
         request.append_option(
-            HeaderOption("Authorization",
-                         "bearer {}".format(self._session.access_token)))
+            HeaderOption('Authorization',
+                         'bearer {}'.format(self._session.access_token)))
 
     def refresh_token(self):
         """Refresh the token currently used by the session"""
@@ -249,25 +252,25 @@ class AuthProvider(AuthProviderBase):
             raise RuntimeError("""Refresh token not present.""")
 
         params = {
-            "refresh_token": self._session.refresh_token,
-            "client_id": self._session.client_id,
-            "redirect_uri": self._session.redirect_uri,
-            "grant_type": "refresh_token"
+            'refresh_token': self._session.refresh_token,
+            'client_id': self._session.client_id,
+            'redirect_uri': self._session.redirect_uri,
+            'grant_type': 'refresh_token'
         }
 
         if self._session.client_secret is not None:
-            params["client_secret"] = self._session.client_secret
+            params['client_secret'] = self._session.client_secret
 
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        response = self._http_provider.send(method="POST",
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        response = self._http_provider.send(method='POST',
                                             headers=headers,
                                             url=self._session.auth_server_url,
                                             data=params)
         rcont = json.loads(response.content)
-        self._session.refresh_session(rcont["expires_in"],
-                                      rcont["scope"],
-                                      rcont["access_token"],
-                                      rcont["refresh_token"])
+        self._session.refresh_session(rcont['expires_in'],
+                                      rcont['scope'],
+                                      rcont['access_token'],
+                                      rcont['refresh_token'])
 
     def redeem_refresh_token(self, resource):
         """Redeem a refresh token against a new resource. Used
@@ -285,24 +288,24 @@ class AuthProvider(AuthProviderBase):
             raise RuntimeError("""Refresh token not present.""")
 
         params = {
-            "client_id": self._session.client_id,
-            "redirect_uri": self._session.redirect_uri,
-            "client_secret": self._session.client_secret,
-            "refresh_token": self._session.refresh_token,
-            "grant_type": "refresh_token",
-            "resource": resource
+            'client_id': self._session.client_id,
+            'redirect_uri': self._session.redirect_uri,
+            'client_secret': self._session.client_secret,
+            'refresh_token': self._session.refresh_token,
+            'grant_type': 'refresh_token',
+            'resource': resource
         }
 
-        headers = {"Content-Type": "application/x-www-form-urlencoded"}
-        response = self._http_provider.send(method="POST",
+        headers = {'Content-Type': 'application/x-www-form-urlencoded'}
+        response = self._http_provider.send(method='POST',
                                             headers=headers,
                                             url=self.auth_token_url,
                                             data=params)
         rcont = json.loads(response.content)
-        self._session.refresh_session(rcont["expires_in"],
-                                      "",
-                                      rcont["access_token"],
-                                      rcont["refresh_token"])
+        self._session.refresh_session(rcont['expires_in'],
+                                      '',
+                                      rcont['access_token'],
+                                      rcont['refresh_token'])
 
     def save_session(self, **save_session_kwargs):
         """Save the current session. Must have already
