@@ -141,12 +141,7 @@ WEBPACK_LOADER = {
 }
 
 # read private credentials from text file
-MSGRAPH_CLIENT_ID, MSGRAPH_CLIENT_SECRET, *_ = open(os.path.join(BASE_DIR, 'social_contacts', '_PRIVATE.txt')) \
-    .read().split('\n')
-if (MSGRAPH_CLIENT_ID.startswith('*') and MSGRAPH_CLIENT_ID.endswith('*')) or \
-        (MSGRAPH_CLIENT_SECRET.startswith('*') and MSGRAPH_CLIENT_SECRET.endswith('*')):
-    print('MISSING CONFIGURATION: the _PRIVATE.txt file needs to be edited to add client ID and secret.')
-    sys.exit(1)
+filename = os.path.join(BASE_DIR, 'social_contacts', '_PRIVATE.txt')
 MSGRAPH_AUTHORITY = 'https://login.microsoftonline.com'
 # MSGraph Contacts not working in the v1.0. Beta version needed
 MSGRAPH_BASE_URL = 'https://graph.microsoft.com/beta/'
@@ -154,9 +149,15 @@ MSGRAPH_SCOPES = (
     'User.Read',
 )
 MSGRAPH_HTTP_PROVIDER = msgraph.HttpProvider()
-MSGRAPH_AUTH_PROVIDER = AuthProvider(
-    MSGRAPH_HTTP_PROVIDER,
-    MSGRAPH_CLIENT_ID,
-    scopes=MSGRAPH_SCOPES,
-    auth_server_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/authorize'),
-    auth_token_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/token'))
+if os.path.isfile(filename):
+    MSGRAPH_CLIENT_ID, MSGRAPH_CLIENT_SECRET, *_ = open(filename).read().split('\n')
+    if (MSGRAPH_CLIENT_ID.startswith('*') and MSGRAPH_CLIENT_ID.endswith('*')) or \
+            (MSGRAPH_CLIENT_SECRET.startswith('*') and MSGRAPH_CLIENT_SECRET.endswith('*')):
+        print('MISSING CONFIGURATION: the _PRIVATE.txt file needs to be edited to add client ID and secret.')
+        sys.exit(1)
+    MSGRAPH_AUTH_PROVIDER = AuthProvider(
+        MSGRAPH_HTTP_PROVIDER,
+        MSGRAPH_CLIENT_ID,
+        scopes=MSGRAPH_SCOPES,
+        auth_server_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/authorize'),
+        auth_token_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/token'))
