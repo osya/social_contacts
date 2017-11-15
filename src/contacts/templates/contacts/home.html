@@ -1,0 +1,28 @@
+{% extends '_layouts/base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block headline %}<h2>Home</h2>{% endblock %}
+
+{% block content %}
+    <p>
+        <a class="btn btn-lg btn-primary" href="{{ signin_url }}" role="button" id="outlook-button">Microsoft Contacts</a>
+    </p>
+    {% if msgraph_contacts %}
+        <h2>Your Microsoft Contacts</h2>
+        <table class="table">
+          <tr>
+            <th>Display Name</th>
+            <th>Email Address</th>
+          </tr>
+
+          {% for contact in msgraph_contacts %}
+            <tr>
+              <td>{{ contact.display_name }}</td>
+              <td>{{ contact.email_addresses.0.address }}</td>
+            </tr>
+          {% endfor %}
+        </table>
+    {% endif %}
+{% endblock %}
+
