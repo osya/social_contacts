@@ -11,14 +11,13 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 """
 
 import os
-# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import sys
 
 import msgraph
 from decouple import Csv, config
 
 from contacts.msgraph.auth_provider import AuthProvider
 
+# Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Quick-start development settings - unsuitable for production
@@ -144,9 +143,9 @@ WEBPACK_LOADER = {
 MSGRAPH_AUTHORITY = 'https://login.microsoftonline.com'
 # MSGraph Contacts not working in the v1.0. Beta version needed
 MSGRAPH_BASE_URL = 'https://graph.microsoft.com/beta/'
-MSGRAPH_SCOPES = (
-    'User.Read',
-)
+MSGRAPH_SCOPES = [
+    'User.Read'
+]
 MSGRAPH_HTTP_PROVIDER = msgraph.HttpProvider()
 MSGRAPH_CLIENT_ID = config('MSGRAPH_CLIENT_ID')
 MSGRAPH_CLIENT_SECRET = config('MSGRAPH_CLIENT_SECRET')
