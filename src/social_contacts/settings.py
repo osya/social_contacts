@@ -15,6 +15,7 @@ import os
 import sys
 
 import msgraph
+from decouple import Csv, config
 
 from contacts.msgraph.auth_provider import AuthProvider
 
@@ -24,12 +25,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '+!jjt1dm)tea84*x3zasi(y%(k*x(6t+11q&y&p*v9b&26rei^'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1', cast=Csv())
 
 # Application definition
 
@@ -140,8 +141,6 @@ WEBPACK_LOADER = {
     }
 }
 
-# read private credentials from text file
-filename = os.path.join(BASE_DIR, 'social_contacts', '_PRIVATE.txt')
 MSGRAPH_AUTHORITY = 'https://login.microsoftonline.com'
 # MSGraph Contacts not working in the v1.0. Beta version needed
 MSGRAPH_BASE_URL = 'https://graph.microsoft.com/beta/'
@@ -149,15 +148,14 @@ MSGRAPH_SCOPES = (
     'User.Read',
 )
 MSGRAPH_HTTP_PROVIDER = msgraph.HttpProvider()
-if os.path.isfile(filename):
-    MSGRAPH_CLIENT_ID, MSGRAPH_CLIENT_SECRET, *_ = open(filename).read().split('\n')
-    if (MSGRAPH_CLIENT_ID.startswith('*') and MSGRAPH_CLIENT_ID.endswith('*')) or \
-            (MSGRAPH_CLIENT_SECRET.startswith('*') and MSGRAPH_CLIENT_SECRET.endswith('*')):
-        print('MISSING CONFIGURATION: the _PRIVATE.txt file needs to be edited to add client ID and secret.')
-        sys.exit(1)
-    MSGRAPH_AUTH_PROVIDER = AuthProvider(
-        MSGRAPH_HTTP_PROVIDER,
-        MSGRAPH_CLIENT_ID,
-        scopes=MSGRAPH_SCOPES,
-        auth_server_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/authorize'),
-        auth_token_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/token'))
+MSGRAPH_CLIENT_ID = config('MSGRAPH_CLIENT_ID')
+MSGRAPH_CLIENT_SECRET = config('MSGRAPH_CLIENT_SECRET')
+MSGRAPH_AUTH_PROVIDER = AuthProvider(
+    MSGRAPH_HTTP_PROVIDER,
+    MSGRAPH_CLIENT_ID,
+    scopes=MSGRAPH_SCOPES,
+    auth_server_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/authorize'),
+    auth_token_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/token'))
+
+FB_APP_ID = config('FB_APP_ID')
+FB_APP_SECRET = config('FB_APP_SECRET')

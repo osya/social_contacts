@@ -2,6 +2,8 @@
 [![Build Status](https://travis-ci.org/osya/social_contacts.svg?branch=master)](https://travis-ci.org/osya/social_contacts)
 
 Used technologies:
+- For Microsoft Graph used Python API https://github.com/microsoftgraph/msgraph-sdk-python
+- OAuth 2
 - Assets management: NPM & Webpack
 - Travis CI
 

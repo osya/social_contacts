@@ -160,3 +160,4 @@ venv.bak/
 /static/static/
 /static/static-only/
 /static/manifest.json
+/.env
