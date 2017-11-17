@@ -155,7 +155,6 @@ venv.bak/
 # mypy
 .mypy_cache/
 /node_modules/
-/src/social_contacts/_PRIVATE.txt
 /src/db.sqlite3
 /static/static/
 /static/static-only/
