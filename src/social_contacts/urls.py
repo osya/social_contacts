@@ -15,10 +15,9 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from django.views.generic import RedirectView
 
 urlpatterns = [
-    url(r'^contacts/', include('contacts.urls', namespace='contacts')),
-    url(r'^$', RedirectView.as_view(pattern_name='contacts:home'), name='home'),
+    url(r'^oauth/', include('social_django.urls', namespace='social')),
     url(r'^admin/', admin.site.urls),
+    url(r'^', include('contacts.urls'))
 ]

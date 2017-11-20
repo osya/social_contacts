@@ -17,7 +17,8 @@ class AuthProvider(AuthProviderBase):
     MSA_AUTH_SERVER_URL = 'https://login.live.com/oauth20_authorize.srf'
     MSA_AUTH_TOKEN_URL = 'https://login.live.com/oauth20_token.srf'
 
-    def __init__(self, http_provider, client_id=None, scopes=None, access_token=None, session_type=None, loop=None,
+    def __init__(self, http_provider, client_id=None, scopes=None, token_type=None, expires_in=None, access_token=None,
+                 refresh_token=None, redirect_uri=None, client_secret=None, session_type=None, loop=None,
                  auth_server_url=None, auth_token_url=None):
         """Initialize the authentication provider for authenticating
         requests sent to MS Graph
@@ -29,7 +30,7 @@ class AuthProvider(AuthProviderBase):
                 application
             scopes (list of str): Defaults to None, the scopes
                 that are required for your application
-            access_token (str): Defaults to None. Not used in this implementation.
+            access_token (str): Defaults to None
             session_type (:class:`SessionBase<msgraph.session_base.SessionBase>`):
                 Defaults to :class:`Session<msgraph.session.Session>`,
                 the implementation of SessionBase that stores your
@@ -50,7 +51,21 @@ class AuthProvider(AuthProviderBase):
         self._client_id = client_id
         self._scopes = scopes
         self._session_type = session_type or Session
-        self._session = None
+        if token_type and expires_in and scopes and access_token and refresh_token and redirect_uri and client_secret:
+            self._session = self._session_type(
+                token_type=token_type,
+                expires_in=expires_in,
+                scope_string=' '.join(scopes),
+                access_token=access_token,
+                client_id=client_id,
+                auth_server_url=auth_token_url,
+                redirect_uri=None,
+                refresh_token=refresh_token,
+                client_secret=client_secret,
+
+            )
+        else:
+            self._session = None
         self._auth_server_url = auth_server_url or self.MSA_AUTH_SERVER_URL
         self._auth_token_url = auth_token_url or self.MSA_AUTH_TOKEN_URL
 

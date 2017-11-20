@@ -2,9 +2,11 @@
 
 # Django
 Django==1.11.3
-django-facebook==6.0.3
 django-webpack-loader==0.5.0
+social-auth-app-django~=2.0.0
 
-git+git://github.com/microsoftgraph/msgraph-sdk-python.git#egg=msgraph
+# SDKs
+facebook-sdk~=2.0.0
+# git+git://github.com/microsoftgraph/msgraph-sdk-python.git#egg=msgraph
 
 python-decouple~=3.1

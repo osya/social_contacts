@@ -16,7 +16,7 @@
       <option name="ignoredPackages">
         <value>
           <list size="1">
-            <item index="0" class="java.lang.String" itemvalue="msgraph-sdk-python" />
+            <item index="0" class="java.lang.String" itemvalue="social-auth-app-django" />
           </list>
         </value>
       </option>

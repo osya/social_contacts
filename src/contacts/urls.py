@@ -3,9 +3,8 @@
 
 from django.conf.urls import url
 
-from contacts.views import HomeView, msgraph_authorized
+from contacts.views import HomeView
 
 urlpatterns = [
-    url(r'^$', HomeView.as_view(), name='home'),
-    url(r'^msgraph_authorized/$', msgraph_authorized, name='msgraph_authorized')
+    url(r'(?:(?P<backend_name>[\w-]+)/)?$', HomeView.as_view(), name='home')
 ]

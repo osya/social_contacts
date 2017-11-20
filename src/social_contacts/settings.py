@@ -15,8 +15,6 @@ import os
 import msgraph
 from decouple import Csv, config
 
-from contacts.msgraph.auth_provider import AuthProvider
-
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -29,7 +27,7 @@ SECRET_KEY = config('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = config('DEBUG', default=False, cast=bool)
 
-ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='127.0.0.1', cast=Csv())
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost', cast=Csv())
 
 # Application definition
 
@@ -43,6 +41,7 @@ DJANGO_APPS = (
 )
 THIRD_PARTY_APPS = (
     'webpack_loader',
+    'social_django'
 )
 LOCAL_APPS = (
     'contacts',
@@ -58,6 +57,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
 
 ROOT_URLCONF = 'social_contacts.urls'
@@ -73,6 +73,8 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends',
+                'social_django.context_processors.login_redirect'
             ],
         },
     },
@@ -140,21 +142,37 @@ WEBPACK_LOADER = {
     }
 }
 
+AUTHENTICATION_BACKENDS = (
+    'social_core.backends.facebook.FacebookOAuth2',
+    'social_core.backends.microsoft.MicrosoftOAuth2',
+)
+
+LOGIN_URL = 'login'
+LOGOUT_URL = 'logout'
+LOGIN_REDIRECT_URL = '/'
+
+SOCIAL_AUTH_FACEBOOK_KEY = config('FACEBOOK_KEY')
+SOCIAL_AUTH_FACEBOOK_SECRET = config('FACEBOOK_SECRET')
+SOCIAL_AUTH_FACEBOOK_SCOPE = ['user_friends']
+SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
+    'fields': 'friends',
+}
+
+SOCIAL_AUTH_MICROSOFT_GRAPH_KEY = config('MICROSOFT_GRAPH_KEY')
+SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = config('MICROSOFT_GRAPH_SECRET')
+SOCIAL_AUTH_MICROSOFT_GRAPH_EXTRA_DATA = [
+    ('expires_in', 'expires'),
+    'refresh_token'
+]
+SOCIAL_AUTH_MICROSOFT_GRAPH_SCOPE = [
+    'offline_access'   # It is needed to get refresh_token
+]
 MSGRAPH_AUTHORITY = 'https://login.microsoftonline.com'
 # MSGraph Contacts not working in the v1.0. Beta version needed
 MSGRAPH_BASE_URL = 'https://graph.microsoft.com/beta/'
 MSGRAPH_SCOPES = [
-    'User.Read'
+    'offline_access',   # It is needed to get refresh_token
+    'User.Read',
+    'Mail.Read'
 ]
 MSGRAPH_HTTP_PROVIDER = msgraph.HttpProvider()
-MSGRAPH_CLIENT_ID = config('MSGRAPH_CLIENT_ID')
-MSGRAPH_CLIENT_SECRET = config('MSGRAPH_CLIENT_SECRET')
-MSGRAPH_AUTH_PROVIDER = AuthProvider(
-    MSGRAPH_HTTP_PROVIDER,
-    MSGRAPH_CLIENT_ID,
-    scopes=MSGRAPH_SCOPES,
-    auth_server_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/authorize'),
-    auth_token_url='{0}{1}'.format(MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/token'))
-
-FB_APP_ID = config('FB_APP_ID')
-FB_APP_SECRET = config('FB_APP_SECRET')
