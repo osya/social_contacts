@@ -7,6 +7,6 @@ social-auth-app-django~=2.0.0
 
 # SDKs
 facebook-sdk~=2.0.0
-# git+git://github.com/microsoftgraph/msgraph-sdk-python.git#egg=msgraph
+git+git://github.com/microsoftgraph/msgraph-sdk-python.git#egg=msgraph
 
 python-decouple~=3.1
