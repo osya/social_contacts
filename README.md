@@ -6,7 +6,7 @@ Used technologies:
 - Used SDKs:
     - [`facebook-sdk`](https://github.com/mobolic/facebook-sdk) - for Facebook Graph
     - For Microsoft Graph used Python API https://github.com/microsoftgraph/msgraph-sdk-python
-    - [`google-api-python-client`](https://github.com/google/google-api-python-client/). This client in the BaseGoogleOAuth2API for getting user data use Google+ API. So, both Google+ API and Google People API credentials should be granted for this app 
+    - [`google-api-python-client`](https://github.com/google/google-api-python-client/). Google People API is using. This client for getting user data in the BaseGoogleOAuth2API use Google+ API. So, both Google+ API and Google People API credentials should be granted for this app 
 - Assets management: NPM & Webpack
 - Travis CI
 
