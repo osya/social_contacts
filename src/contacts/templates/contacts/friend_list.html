@@ -5,17 +5,18 @@
 {% block headline %}<h2>Home</h2>{% endblock %}
 
 {% block content %}
-    <a href="{% url 'social:begin' 'facebook' %}?next={% url 'home' backend_name='facebook' %}">Facebook Contacts</a><br>
+    <a href="{% url 'social:begin' 'facebook' %}?next={% url 'home' backend_name='facebook' %}">Facebook Friends</a><br>
     <a href="{% url 'social:begin' 'microsoft-graph' %}?next={% url 'home' backend_name='microsoft-graph' %}">Microsoft Contacts</a><br>
+    <a href="{% url 'social:begin' 'google-oauth2' %}?next={% url 'home' backend_name='google-oauth2' %}">Google People</a><br>
 {#    TODO: Add navbar#}
 
     <div class="row">
         <div class="col-sm-6 col-sm-offset-3">
-            {% if backend_name %}<h2>Your {{ backend_name | title }} Contacts</h2>{% endif %}
+            {% if backend_name and friend_list %}<h2>Your {{ backend_name | title }} Contacts</h2>{% endif %}
             <ul class="list-group">
                 {% for friend in friend_list %}
                     <li class="list-group-item">
-                        {{ friend }}
+                        {{ forloop.counter }}. {{ friend }}
                     </li>
                 {% endfor %}
             </ul>

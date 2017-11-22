@@ -2,6 +2,8 @@ import facebook
 import msgraph
 from django.conf import settings
 from django.db import models
+from googleapiclient.discovery import build
+from oauth2client.client import AccessTokenCredentials
 from social_django.models import UserSocialAuth
 from social_django.utils import load_strategy
 
@@ -19,7 +21,7 @@ class Friend(models.Model):
 
     @staticmethod
     def fetch(social_user, request):
-        if not social_user or social_user.provider not in ('facebook', 'microsoft-graph'):
+        if not social_user or social_user.provider not in ('facebook', 'microsoft-graph', 'google-oauth2'):
             return
 
         if social_user.provider == 'facebook':
@@ -55,12 +57,28 @@ class Friend(models.Model):
                 settings.MSGRAPH_HTTP_PROVIDER
             )
             # TODO: Add paging for MSGraph Contacts. Currently only fixed number of contacts requested
-            friends = client.me.contacts. \
+            contacts = client.me.contacts. \
                 request(top=100, select='displayName,emailAddresses', order_by='displayName', skip=100).get()
-            for friend in friends:
-                if not Friend.objects.filter(social_id=friend.id_).exists():
+            for contact in contacts:
+                if not Friend.objects.filter(social_id=contact.id_).exists():
                     Friend(
-                        social_id=friend.id_,
-                        name=friend.display_name,
+                        social_id=contact.id_,
+                        name=contact.display_name,
+                        user_social_auth=social_user
+                    ).save()
+        elif social_user.provider == 'google-oauth2':
+            credentials = AccessTokenCredentials(social_user.access_token, 'Python client library')
+            service = build(serviceName='people', version='v1', credentials=credentials)
+            people = service\
+                .people().connections()\
+                .list(resourceName='people/me', personFields='names,emailAddresses')\
+                .execute()
+            for item in people.get('connections'):
+                id = item['resourceName'].split('/')[1]
+                name = item.get('names', [{}])[0].get('displayName')
+                if id and name and not Friend.objects.filter(social_id=id).exists():
+                    Friend(
+                        social_id=id,
+                        name=name,
                         user_social_auth=social_user
                     ).save()

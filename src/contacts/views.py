@@ -10,7 +10,7 @@ class HomeView(ListView):
             social_user = self.request.user.social_auth.get(provider=backend_name)
             if social_user:
                 Friend.fetch(social_user, self.request)
-                return Friend.objects.filter(user_social_auth__id=social_user.id)
+                return Friend.objects.filter(user_social_auth__id=social_user.id).order_by('name')
         return Friend.objects.none()
 
     def get_context_data(self, **kwargs):

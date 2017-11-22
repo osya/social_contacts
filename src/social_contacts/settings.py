@@ -145,6 +145,7 @@ WEBPACK_LOADER = {
 AUTHENTICATION_BACKENDS = (
     'social_core.backends.facebook.FacebookOAuth2',
     'social_core.backends.microsoft.MicrosoftOAuth2',
+    'social_core.backends.google.GoogleOAuth2',
 )
 
 LOGIN_URL = 'login'
@@ -176,3 +177,9 @@ MSGRAPH_SCOPES = [
     'Mail.Read'
 ]
 MSGRAPH_HTTP_PROVIDER = msgraph.HttpProvider()
+
+SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_OAUTH2_KEY')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_OAUTH2_SECRET')
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
+    'https://www.googleapis.com/auth/contacts.readonly'
+]
