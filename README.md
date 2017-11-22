@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/osya/social_contacts.svg?branch=master)](https://travis-ci.org/osya/social_contacts)
 
 Used technologies:
+- Python & Django
 - OAuth 2. [`social-app-django`](github.com/python-social-auth/social-app-django) - for authenticate in different social services (Facebook, Microsoft Graph, etc)
 - Used SDKs:
     - [`facebook-sdk`](https://github.com/mobolic/facebook-sdk) - for Facebook Graph
