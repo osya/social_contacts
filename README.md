@@ -5,7 +5,8 @@ Used technologies:
 - Python & Django
 - OAuth 2. [`social-app-django`](github.com/python-social-auth/social-app-django) - for authenticate in different social services (Facebook, Microsoft Graph, etc)
 - Used SDKs:
-    - [`facebook-sdk`](https://github.com/mobolic/facebook-sdk) - for Facebook Graph
+    - [`facebook-sdk`](https://github.com/mobolic/facebook-sdk) - for Facebook Graph. For getting user friends permission `user_friends` required
+
     - For Microsoft Graph used Python API https://github.com/microsoftgraph/msgraph-sdk-python
     - [`google-api-python-client`](https://github.com/google/google-api-python-client/). Google People API is using. This client for getting user data in the BaseGoogleOAuth2API use Google+ API. So, both Google+ API and Google People API credentials should be granted for this app 
 - Assets management: NPM & Webpack
