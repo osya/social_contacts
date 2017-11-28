@@ -146,6 +146,7 @@ AUTHENTICATION_BACKENDS = (
     'social_core.backends.facebook.FacebookOAuth2',
     'social_core.backends.microsoft.MicrosoftOAuth2',
     'social_core.backends.google.GoogleOAuth2',
+    'social_core.backends.yahoo.YahooOAuth2'
 )
 
 LOGIN_URL = 'login'
@@ -183,3 +184,6 @@ SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_OAUTH2_SECRET')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
     'https://www.googleapis.com/auth/contacts.readonly'
 ]
+
+SOCIAL_AUTH_YAHOO_OAUTH2_KEY = config('YAHOO_OAUTH2_KEY')
+SOCIAL_AUTH_YAHOO_OAUTH2_SECRET = config('YAHOO_OAUTH2_SECRET')

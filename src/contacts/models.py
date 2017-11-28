@@ -1,5 +1,6 @@
 import facebook
 import msgraph
+import requests
 from django.conf import settings
 from django.db import models
 from googleapiclient.discovery import build
@@ -21,7 +22,8 @@ class Friend(models.Model):
 
     @staticmethod
     def fetch(social_user, request):
-        if not social_user or social_user.provider not in ('facebook', 'microsoft-graph', 'google-oauth2'):
+        if not social_user or social_user.provider not in ('facebook', 'microsoft-graph', 'google-oauth2',
+                                                           'yahoo-oauth2'):
             return
 
         if social_user.provider == 'facebook':
@@ -76,6 +78,23 @@ class Friend(models.Model):
             for item in people.get('connections'):
                 id = item['resourceName'].split('/')[1]
                 name = item.get('names', [{}])[0].get('displayName')
+                if id and name and not Friend.objects.filter(social_id=id).exists():
+                    Friend(
+                        social_id=id,
+                        name=name,
+                        user_social_auth=social_user
+                    ).save()
+        elif social_user.provider == 'yahoo-oauth2':
+            guid = social_user.uid
+            url = 'https://social.yahooapis.com/v1/user/{0}/contacts?format=json'.format(guid)
+            headers = {
+                'Authorization': 'Bearer {0}'.format(social_user.access_token)
+            }
+            page = requests.get(url, headers=headers)
+            for contact in page.json()['contacts']['contact']:
+                id = contact.get('uri')
+                name_dict = [e for e in contact.get('fields') if e.get('type') == 'name'][0].get('value')
+                name = '%s %s' % (name_dict.get('givenName'), name_dict.get('familyName'))
                 if id and name and not Friend.objects.filter(social_id=id).exists():
                     Friend(
                         social_id=id,
