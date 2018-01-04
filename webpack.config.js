@@ -10,11 +10,11 @@ const rootAssetPath = path.join(__dirname, "static");
         const isDevBuild = !(env && env.prod);
         return {
             entry: {
-                main: [
-                    "jquery", // jQuery is required by taggit-selectize
+                main: path.join(rootAssetPath, "css", "main.css"),
+                vendor: [
+                    "jquery",
                     "bootstrap",
                     "bootstrap/dist/css/bootstrap.css",
-                    path.join(rootAssetPath, "css", "main.css")
                 ]
             },
             output: {
