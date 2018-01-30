@@ -24,3 +24,4 @@ if __name__ == '__main__':
 # TODO: Design class structure. Выделить класс-предок для всех сервисов. Видимо, реализовать этот класс следует через
 # Django CBV
 # TODO: Write tests and connect to the Coveralls
+# TODO: Add DRF API
