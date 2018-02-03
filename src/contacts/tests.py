@@ -1,3 +1,8 @@
-from django.test import TestCase  # noqa
+from django.test import LiveServerTestCase
+from django.urls import reverse
 
-# Create your tests here.
+
+class IntegrationTests(LiveServerTestCase):
+    def test_slash(self):
+        response = self.client.get(reverse('home'))
+        self.failUnlessEqual(response.status_code, 200)
