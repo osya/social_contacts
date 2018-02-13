@@ -33,6 +33,8 @@ Used technologies:
 
 ## Tests
 
+To run all tests, run
+
 ```shell
     python manage.py lint
 ```
