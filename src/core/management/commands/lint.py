@@ -12,8 +12,7 @@ class Command(BaseCommand):
     help = 'Lint and check code style with flake8 and isort'
 
     def add_arguments(self, parser):
-        parser.add_argument('-f', '--fix-imports', action='store_true',
-                            help='Fix imports using isort, before linting')
+        parser.add_argument('-f', '--fix-imports', action='store_true', help='Fix imports using isort, before linting')
 
     def handle(self, *args, **options):
         skip = ('requirements', 'env', 'static', '__pycache__')
