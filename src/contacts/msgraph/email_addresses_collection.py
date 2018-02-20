@@ -8,7 +8,6 @@ from msgraph.collection_base import CollectionPageBase, CollectionRequestBase, C
 
 
 class EmailAddressesCollectionRequest(CollectionRequestBase):
-
     def __init__(self, request_url, client, options):
         """Initialize the EmailAddressesCollectionRequest
 
@@ -41,14 +40,12 @@ class EmailAddressesCollectionRequest(CollectionRequestBase):
             :class:`EmailAddressesCollectionPage<msgraph.request.email_addresses_collection.EmailAddressesCollectionPage>`:
                 The EmailAddressesCollectionPage
         """
-        future = self._client._loop.run_in_executor(None,
-                                                    self.get)
+        future = self._client._loop.run_in_executor(None, self.get)
         collection_page = yield from future
         return collection_page
 
 
 class EmailAddressesCollectionResponse(CollectionResponseBase):
-
     @property
     def collection_page(self):
         """The collection page stored in the response JSON
@@ -66,7 +63,6 @@ class EmailAddressesCollectionResponse(CollectionResponseBase):
 
 
 class EmailAddressesCollectionPage(CollectionPageBase):
-
     def __getitem__(self, index):
         """Get the EmailAddress at the index specified
 

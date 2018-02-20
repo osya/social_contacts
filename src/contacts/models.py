@@ -33,11 +33,7 @@ class Friend(models.Model):
 
             for friend in friends:
                 if not Friend.objects.filter(social_id=friend.get('id')).exists():
-                    Friend(
-                        social_id=friend.get('id'),
-                        name=friend.get('name'),
-                        user_social_auth=social_user
-                    ).save()
+                    Friend(social_id=friend.get('id'), name=friend.get('name'), user_social_auth=social_user).save()
         elif social_user.provider == 'microsoft-graph':
             backend = social_user.get_backend_instance(load_strategy(request))
             auth_provider = AuthProvider(
@@ -51,23 +47,15 @@ class Friend(models.Model):
                 redirect_uri=backend.get_redirect_uri(),
                 client_secret=settings.SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET,
                 auth_server_url='{0}{1}'.format(settings.MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/authorize'),
-                auth_token_url='{0}{1}'.format(settings.MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/token')
-            )
-            client = msgraph.GraphServiceClient(
-                settings.MSGRAPH_BASE_URL,
-                auth_provider,
-                settings.MSGRAPH_HTTP_PROVIDER
-            )
+                auth_token_url='{0}{1}'.format(settings.MSGRAPH_AUTHORITY, '/common/oauth2/v2.0/token'))
+            client = msgraph.GraphServiceClient(settings.MSGRAPH_BASE_URL, auth_provider,
+                                                settings.MSGRAPH_HTTP_PROVIDER)
             # TODO: Add paging for MSGraph Contacts. Currently only fixed number of contacts requested
             contacts = client.me.contacts. \
                 request(top=100, select='displayName,emailAddresses', order_by='displayName', skip=100).get()
             for contact in contacts:
                 if not Friend.objects.filter(social_id=contact.id_).exists():
-                    Friend(
-                        social_id=contact.id_,
-                        name=contact.display_name,
-                        user_social_auth=social_user
-                    ).save()
+                    Friend(social_id=contact.id_, name=contact.display_name, user_social_auth=social_user).save()
         elif social_user.provider == 'google-oauth2':
             credentials = AccessTokenCredentials(social_user.access_token, 'Python client library')
             service = build(serviceName='people', version='v1', credentials=credentials)
@@ -79,25 +67,15 @@ class Friend(models.Model):
                 id = item['resourceName'].split('/')[1]
                 name = item.get('names', [{}])[0].get('displayName')
                 if id and name and not Friend.objects.filter(social_id=id).exists():
-                    Friend(
-                        social_id=id,
-                        name=name,
-                        user_social_auth=social_user
-                    ).save()
+                    Friend(social_id=id, name=name, user_social_auth=social_user).save()
         elif social_user.provider == 'yahoo-oauth2':
             guid = social_user.uid
             url = 'https://social.yahooapis.com/v1/user/{0}/contacts?format=json'.format(guid)
-            headers = {
-                'Authorization': 'Bearer {0}'.format(social_user.access_token)
-            }
+            headers = {'Authorization': 'Bearer {0}'.format(social_user.access_token)}
             page = requests.get(url, headers=headers)
             for contact in page.json()['contacts']['contact']:
                 id = contact.get('uri')
                 name_dict = [e for e in contact.get('fields') if e.get('type') == 'name'][0].get('value')
                 name = '%s %s' % (name_dict.get('givenName'), name_dict.get('familyName'))
                 if id and name and not Friend.objects.filter(social_id=id).exists():
-                    Friend(
-                        social_id=id,
-                        name=name,
-                        user_social_auth=social_user
-                    ).save()
+                    Friend(social_id=id, name=name, user_social_auth=social_user).save()

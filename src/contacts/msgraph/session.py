@@ -6,7 +6,6 @@ from msgraph.session_base import SessionBase
 
 
 class Session(SessionBase):
-
     def __init__(self,
                  token_type,
                  expires_in,

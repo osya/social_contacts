@@ -17,9 +17,20 @@ class AuthProvider(AuthProviderBase):
     MSA_AUTH_SERVER_URL = 'https://login.live.com/oauth20_authorize.srf'
     MSA_AUTH_TOKEN_URL = 'https://login.live.com/oauth20_token.srf'
 
-    def __init__(self, http_provider, client_id=None, scopes=None, token_type=None, expires_in=None, access_token=None,
-                 refresh_token=None, redirect_uri=None, client_secret=None, session_type=None, loop=None,
-                 auth_server_url=None, auth_token_url=None):
+    def __init__(self,
+                 http_provider,
+                 client_id=None,
+                 scopes=None,
+                 token_type=None,
+                 expires_in=None,
+                 access_token=None,
+                 refresh_token=None,
+                 redirect_uri=None,
+                 client_secret=None,
+                 session_type=None,
+                 loop=None,
+                 auth_server_url=None,
+                 auth_token_url=None):
         """Initialize the authentication provider for authenticating
         requests sent to MS Graph
 
@@ -62,7 +73,6 @@ class AuthProvider(AuthProviderBase):
                 redirect_uri=None,
                 refresh_token=refresh_token,
                 client_secret=client_secret,
-
             )
         else:
             self._session = None
@@ -167,31 +177,19 @@ class AuthProvider(AuthProviderBase):
         Args:
             redirect_uri (str): The URI to redirect the response to
         """
-        params = {
-            'client_id': self.client_id,
-            'client_secret': client_secret,
-            'grant_type': 'client_credentials'
-        }
+        params = {'client_id': self.client_id, 'client_secret': client_secret, 'grant_type': 'client_credentials'}
 
         if scope is not None:
             params['scope'] = scope
 
         auth_url = self._auth_token_url
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        response = self._http_provider.send(method='POST',
-                                            headers=headers,
-                                            url=auth_url,
-                                            data=params)
+        response = self._http_provider.send(method='POST', headers=headers, url=auth_url, data=params)
 
         rcont = json.loads(response.content)
-        self._session = self._session_type(rcont['token_type'],
-                                           rcont['expires_in'],
-                                           rcont['access_token'],
-                                           self.client_id,
-                                           self._auth_token_url,
-                                           redirect_uri,
-                                           rcont['refresh_token'] if 'refresh_token' in rcont else None,
-                                           client_secret)
+        self._session = self._session_type(rcont['token_type'], rcont['expires_in'], rcont['access_token'],
+                                           self.client_id, self._auth_token_url, redirect_uri, rcont['refresh_token']
+                                           if 'refresh_token' in rcont else None, client_secret)
 
     def authenticate(self, code, redirect_uri, client_secret, resource=None):
         """Takes in a code, gets the access token and creates a session.
@@ -219,21 +217,12 @@ class AuthProvider(AuthProviderBase):
 
         auth_url = self._auth_token_url
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        response = self._http_provider.send(method='POST',
-                                            headers=headers,
-                                            url=auth_url,
-                                            data=params)
+        response = self._http_provider.send(method='POST', headers=headers, url=auth_url, data=params)
 
         rcont = json.loads(response.content)
-        self._session = self._session_type(rcont['token_type'],
-                                           rcont['expires_in'],
-                                           rcont['scope'],
-                                           rcont['access_token'],
-                                           self.client_id,
-                                           self._auth_token_url,
-                                           redirect_uri,
-                                           rcont['refresh_token'] if 'refresh_token' in rcont else None,
-                                           client_secret)
+        self._session = self._session_type(rcont['token_type'], rcont['expires_in'], rcont['scope'],
+                                           rcont['access_token'], self.client_id, self._auth_token_url, redirect_uri,
+                                           rcont['refresh_token'] if 'refresh_token' in rcont else None, client_secret)
 
     def authenticate_request(self, request):
         """Append the required authentication headers
@@ -253,9 +242,7 @@ class AuthProvider(AuthProviderBase):
         if self._session.is_expired() and 'wl.offline_access' in self.scopes:
             self.refresh_token()
 
-        request.append_option(
-            HeaderOption('Authorization',
-                         'bearer {}'.format(self._session.access_token)))
+        request.append_option(HeaderOption('Authorization', 'bearer {}'.format(self._session.access_token)))
 
     def refresh_token(self):
         """Refresh the token currently used by the session"""
@@ -277,14 +264,10 @@ class AuthProvider(AuthProviderBase):
             params['client_secret'] = self._session.client_secret
 
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        response = self._http_provider.send(method='POST',
-                                            headers=headers,
-                                            url=self._session.auth_server_url,
-                                            data=params)
+        response = self._http_provider.send(
+            method='POST', headers=headers, url=self._session.auth_server_url, data=params)
         rcont = json.loads(response.content)
-        self._session.refresh_session(rcont['expires_in'],
-                                      rcont['scope'],
-                                      rcont['access_token'],
+        self._session.refresh_session(rcont['expires_in'], rcont['scope'], rcont['access_token'],
                                       rcont['refresh_token'])
 
     def redeem_refresh_token(self, resource):
@@ -312,15 +295,9 @@ class AuthProvider(AuthProviderBase):
         }
 
         headers = {'Content-Type': 'application/x-www-form-urlencoded'}
-        response = self._http_provider.send(method='POST',
-                                            headers=headers,
-                                            url=self.auth_token_url,
-                                            data=params)
+        response = self._http_provider.send(method='POST', headers=headers, url=self.auth_token_url, data=params)
         rcont = json.loads(response.content)
-        self._session.refresh_session(rcont['expires_in'],
-                                      '',
-                                      rcont['access_token'],
-                                      rcont['refresh_token'])
+        self._session.refresh_session(rcont['expires_in'], '', rcont['access_token'], rcont['refresh_token'])
 
     def save_session(self, **save_session_kwargs):
         """Save the current session. Must have already

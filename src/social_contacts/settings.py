@@ -39,25 +39,15 @@ DJANGO_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
 )
-THIRD_PARTY_APPS = (
-    'webpack_loader',
-    'social_django'
-)
-LOCAL_APPS = (
-    'contacts',
-    'core'
-)
+THIRD_PARTY_APPS = ('webpack_loader', 'social_django')
+LOCAL_APPS = ('contacts', 'core')
 INSTALLED_APPS = DJANGO_APPS + THIRD_PARTY_APPS + LOCAL_APPS
 
 MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    'social_django.middleware.SocialAuthExceptionMiddleware'
+    'django.middleware.security.SecurityMiddleware', 'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware', 'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware', 'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware', 'social_django.middleware.SocialAuthExceptionMiddleware'
 ]
 
 ROOT_URLCONF = 'social_contacts.urls'
@@ -69,12 +59,9 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                'django.template.context_processors.debug',
-                'django.template.context_processors.request',
-                'django.contrib.auth.context_processors.auth',
-                'django.contrib.messages.context_processors.messages',
-                'social_django.context_processors.backends',
-                'social_django.context_processors.login_redirect'
+                'django.template.context_processors.debug', 'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth', 'django.contrib.messages.context_processors.messages',
+                'social_django.context_processors.backends', 'social_django.context_processors.login_redirect'
             ],
         },
     },
@@ -130,7 +117,7 @@ STATIC_URL = '/static/'
 
 if DEBUG:
     STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), 'static', 'static-only')
-    STATICFILES_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'static', 'static'),)
+    STATICFILES_DIRS = (os.path.join(os.path.dirname(BASE_DIR), 'static', 'static'), )
 
 WEBPACK_LOADER = {
     'DEFAULT': {
@@ -142,12 +129,9 @@ WEBPACK_LOADER = {
     }
 }
 
-AUTHENTICATION_BACKENDS = (
-    'social_core.backends.facebook.FacebookOAuth2',
-    'social_core.backends.microsoft.MicrosoftOAuth2',
-    'social_core.backends.google.GoogleOAuth2',
-    'social_core.backends.yahoo.YahooOAuth2'
-)
+AUTHENTICATION_BACKENDS = ('social_core.backends.facebook.FacebookOAuth2',
+                           'social_core.backends.microsoft.MicrosoftOAuth2', 'social_core.backends.google.GoogleOAuth2',
+                           'social_core.backends.yahoo.YahooOAuth2')
 
 LOGIN_URL = 'login'
 LOGOUT_URL = 'logout'
@@ -162,18 +146,15 @@ SOCIAL_AUTH_FACEBOOK_PROFILE_EXTRA_PARAMS = {
 
 SOCIAL_AUTH_MICROSOFT_GRAPH_KEY = config('MICROSOFT_GRAPH_KEY')
 SOCIAL_AUTH_MICROSOFT_GRAPH_SECRET = config('MICROSOFT_GRAPH_SECRET')
-SOCIAL_AUTH_MICROSOFT_GRAPH_EXTRA_DATA = [
-    ('expires_in', 'expires'),
-    'refresh_token'
-]
+SOCIAL_AUTH_MICROSOFT_GRAPH_EXTRA_DATA = [('expires_in', 'expires'), 'refresh_token']
 SOCIAL_AUTH_MICROSOFT_GRAPH_SCOPE = [
-    'offline_access'   # It is needed to get refresh_token
+    'offline_access'  # It is needed to get refresh_token
 ]
 MSGRAPH_AUTHORITY = 'https://login.microsoftonline.com'
 # MSGraph Contacts not working in the v1.0. Beta version needed
 MSGRAPH_BASE_URL = 'https://graph.microsoft.com/beta/'
 MSGRAPH_SCOPES = [
-    'offline_access',   # It is needed to get refresh_token
+    'offline_access',  # It is needed to get refresh_token
     'User.Read',
     'Mail.Read'
 ]
@@ -181,9 +162,7 @@ MSGRAPH_HTTP_PROVIDER = msgraph.HttpProvider()
 
 SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = config('GOOGLE_OAUTH2_KEY')
 SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = config('GOOGLE_OAUTH2_SECRET')
-SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = [
-    'https://www.googleapis.com/auth/contacts.readonly'
-]
+SOCIAL_AUTH_GOOGLE_OAUTH2_SCOPE = ['https://www.googleapis.com/auth/contacts.readonly']
 
 SOCIAL_AUTH_YAHOO_OAUTH2_KEY = config('YAHOO_OAUTH2_KEY')
 SOCIAL_AUTH_YAHOO_OAUTH2_SECRET = config('YAHOO_OAUTH2_SECRET')

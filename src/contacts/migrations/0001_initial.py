@@ -21,7 +21,12 @@ class Migration(migrations.Migration):
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('social_id', models.PositiveIntegerField(db_index=True, default=0, unique=True)),
                 ('name', models.CharField(max_length=100)),
-                ('user_social_auth', models.ForeignKey(default=0, on_delete=django.db.models.deletion.CASCADE, related_name='friends', to='social_django.UserSocialAuth')),
+                ('user_social_auth',
+                 models.ForeignKey(
+                     default=0,
+                     on_delete=django.db.models.deletion.CASCADE,
+                     related_name='friends',
+                     to='social_django.UserSocialAuth')),
             ],
         ),
     ]
