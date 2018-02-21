@@ -4,5 +4,5 @@ from django.urls import reverse
 
 class IntegrationTests(LiveServerTestCase):
     def test_slash(self):
-        response = self.client.get(reverse('home'))
+        response = self.client.get(reverse('contacts:home'))
         self.assertEqual(response.status_code, 200)

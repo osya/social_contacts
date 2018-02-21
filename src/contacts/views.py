@@ -17,4 +17,4 @@ class HomeView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         kwargs['backend_name'] = self.kwargs.get('backend_name', None)
-        return super(HomeView, self).get_context_data(object_list, **kwargs)
+        return super(HomeView, self).get_context_data(object_list=object_list, **kwargs)
