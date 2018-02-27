@@ -1,9 +1,10 @@
 # noinspection PyPackageRequirements
+from django.conf import settings
+from django.db import models
+
 import facebook
 import msgraph
 import requests
-from django.conf import settings
-from django.db import models
 # noinspection PyPackageRequirements
 from googleapiclient.discovery import build
 from oauth2client.client import AccessTokenCredentials
