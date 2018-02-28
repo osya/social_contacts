@@ -5,11 +5,11 @@
     const webpack = require("webpack");
 
     (function (extractCss, webpack2) {
-        module.exports = (env) => {
+        module.exports = (env, argv) => {
             const path = require("path");
             const BundleTracker = require("webpack-bundle-tracker");
             const rootAssetPath = path.join(__dirname, "static");
-            const isDevBuild = !(env && env.prod);
+            const isDevMode = argv.mode === 'development';
             return {
                 entry: {
                     main: path.join(rootAssetPath, "css", "main.css"),
@@ -25,9 +25,6 @@
                     filename: "[name].[hash].js",
                     library: "[name]_[hash]"
                 },
-                resolve: {
-                    extensions: [".js", ".css"]
-                },
                 module: {
                     rules: [{
                             test: require.resolve("jquery"),
@@ -40,7 +37,7 @@
                             test: /\.css(\?|$)/,
                             use: extractCss.extract({
                                 use: [
-                                    isDevBuild ? "css-loader" : "css-loader?minimize", "postcss-loader"
+                                    isDevMode ? "css-loader" : "css-loader?minimize", "postcss-loader"
                                 ]
                             })
                         },
@@ -50,9 +47,6 @@
                         }
                     ]
                 },
-                stats: {
-                    modules: false
-                },
                 plugins: [
                     new webpack2.ProvidePlugin({
                         jQuery: "jquery"
@@ -61,9 +55,8 @@
                     new BundleTracker({
                         filename: path.join("static", "manifest.json")
                     })
-                ].concat(isDevBuild ? [] : [new webpack2.optimize.UglifyJsPlugin()])
+                ]
             };
         };
     }(new ExtractTextPlugin("[name].[chunkhash].css"), webpack));
-
 }());
